@@ -132,13 +132,33 @@ class Demo2 extends AdventureScene {
             .on('pointerover', () => this.showMessage("*STOMACH GROWLS*\nGo to the cheese?"))
             .on('pointerdown', () => {
                 this.showMessage("*skittering noise*")
-                this.gotoScene('demo1')
+                this.gotoScene('demo3')
                 }
         )}
 
     }
 
 
+class Demo3 extends AdventureScene {
+    constructor() {
+        super("demo3", "Under the bed");
+    }
+    preload(){
+        this.load.path= './assets';
+        this.load.image('key','key.png');
+        this.load.image('cheese','cheese.png');
+        this.load.image('hallway','hallway.png');
+        this.load.image('mouse','mosue.png');
+    }
+    onEnter(){
+        let hall = this.add.image(720,540,'hallway');
+        hall.setScale(820/hall.height,1920/hall.width)
+        let mouse = this.add.image(720,640,'mouse');
+        mouse.setScale(320/mouse.height,480/mouse.width)
+        let text = this.add.text(10,10, "While on the way to the cheese you see a key.\nYou stop to make a decision as your tummy growls\n*rumbling*")
+            .setFontSize(this.s * 2.5);
+    }
+}
 //
 //        let finish = this.add.text(this.w * 0.6, this.w * 0.2, '(finish the game)')
 //            .setInteractive()
@@ -189,7 +209,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Intro, Demo1, Demo2, Outro],
+    scene: [Intro, Demo1, Demo2, Demo3, Outro],
     title: "Adventure Game",
 });
 
