@@ -134,14 +134,52 @@ class Demo2 extends AdventureScene {
                 this.showMessage("*skittering noise*")
                 this.gotoScene('demo3')
                 }
-        )}
+        )};
 
     }
 
 
 class Demo3 extends AdventureScene {
     constructor() {
-        super("demo3", "Under the bed");
+        super("demo3", "hallway");
+    }
+    preload(){
+        this.load.path = './assets';
+        this.load.image('key','key.png');
+        this.load.image('cheese','cheese.png');
+        this.load.image('hallway','hallway.png');
+        this.load.image('mouse','mosue.png');
+    }
+    onEnter(){
+        let hall = this.add.image(720,540,'hallway');
+        hall.setScale(820/hall.height,1920/hall.width)
+        let mouse = this.add.image(720,640,'mouse');
+        mouse.setScale(320/mouse.height,480/mouse.width)
+        let text = this.add.text(10,10, "While on the way to the cheese you see a key.\nYou stop to make a decision as your tummy growls\n*rumbling*")
+            .setFontSize(this.s * 2.5);
+
+        let key = this.add.image(620,960,'key')
+            .setInteractive()
+            .on('pointerover', () => this.showMessage("*STOMACH GROWLS*\nGo to the Key?\n*It might be useful*"))
+            .on('pointerdown', () => {
+                this.showMessage("*skittering noise*")
+                this.gotoScene('demo4')
+                });
+        let cheese = this.add.image(1020,930,'cheese')
+            .setScale(this.s * .014)
+            .setInteractive()
+            .on('pointerover', () => this.showMessage("*STOMACH GROWLS*\nGo to the cheese?"))
+            .on('pointerdown', () => {
+                this.showMessage("*skittering noise*")
+                this.gotoScene('demo5')
+                });    
+
+    }
+}
+
+class Demo4 extends AdventureScene {
+    constructor() {
+        super("demo4", "key");
     }
     preload(){
         this.load.path= './assets';
@@ -155,11 +193,79 @@ class Demo3 extends AdventureScene {
         hall.setScale(820/hall.height,1920/hall.width)
         let mouse = this.add.image(720,640,'mouse');
         mouse.setScale(320/mouse.height,480/mouse.width)
-        let text = this.add.text(10,10, "While on the way to the cheese you see a key.\nYou stop to make a decision as your tummy growls\n*rumbling*")
+        let text = this.add.text(10,10, "Now that you are here you are starving\nbut the key is right in front of you\nand it looks very important :)")
             .setFontSize(this.s * 2.5);
+
+            let key = this.add.image(620,960,'key')
+            .setInteractive()
+            .on('pointerover', () => this.showMessage("*STOMACH GROWLS*\nPick up the key?\n you might as well you already\ncame to it\n*also It might be useful*"))
+            .on('pointerdown', () => {
+                    this.showMessage("You pick up the key.");
+                    this.gainItem('key');
+                    this.tweens.add({
+                    targets: key,
+                    y: `-=${2 * this.s}`,
+                    alpha: { from: 1, to: 0 },
+                    duration: 500,
+                    onComplete: () => key.destroy()
+                        })
+                    });
+                
+                let cheese = this.add.image(1020,930,'cheese')
+                .setScale(this.s * .014)
+                .setInteractive()
+                .on('pointerover', () => this.showMessage("*STOMACH GROWLS*\nGo to the cheese?"))
+                .on('pointerdown', () => {
+                    this.showMessage("*skittering noise*")
+                    this.gotoScene('demo5')
+                    });
+                }
+}
+
+class Demo5 extends AdventureScene {
+    constructor() {
+        super("demo5", "cage");
+    }
+    preload(){
+        this.load.path= './assets';
+        this.load.image('cage', 'cage.png');
+        this.load.image('mosue','mouse.png');
+    }
+
+    onEnter(){
+        let mouse = this.add.image(720,640,'mouse');
+        mouse.setScale(320/mouse.height,480/mouse.width)
+        let cage = this.add.image(720,0,'cage');
+        cage.setScale(400/cage.height,600/cage.width)
+        .setInteractive()
+                    .on('pointerover', () => {
+                        if (this.hasItem("key")) {
+                            this.showMessage("well good thing you took the time to pick up that key :)");
+                        } else {
+                            this.showMessage("uh oh maybe you should have taken the time to get the key :(");
+                        }
+                    })
+                    .on('pointerdown', () => {
+                        if (this.hasItem("key")) {
+                            this.loseItem("key");
+                            this.showMessage("*click*\nyou have escaped:)");
+                            this.gotoScene('win');
+                        } else {
+                            this.showMessage("FUCK!");
+                            this.gotoScene('lose');
+                        }
+                    })
+
+            this.tweens.add({
+                targets: cage,
+                y: 640,
+                duration: 2000,
+                repeat: 0,
+                ease: 'cubic.in'
+
+        });
     }
 }
-//
 //        let finish = this.add.text(this.w * 0.6, this.w * 0.2, '(finish the game)')
 //            .setInteractive()
 //            .on('pointerover', () => {
@@ -181,8 +287,9 @@ class Intro extends Phaser.Scene {
         super('intro')
     }
     create() {
-        this.add.text(50,50, "Adventure awaits!").setFontSize(50);
-        this.add.text(50,100, "Click anywhere to begin.").setFontSize(20);
+        this.add.text(50,50, "WELCOME TO MOUSE TRAP!!!").setFontSize(50);
+        this.add.text(50,100,'You are a mouse who has escaped its jail cell of a cage now it is time to escape!').setFontSize(20);
+        this.add.text(50,150, "Click anywhere to begin.").setFontSize(20);
         this.input.on('pointerdown', () => {
             this.cameras.main.fade(1000, 0,0,0);
             this.time.delayedCall(1000, () => this.scene.start('demo1'));
@@ -190,12 +297,23 @@ class Intro extends Phaser.Scene {
     }
 }
 
-class Outro extends Phaser.Scene {
+class Win extends Phaser.Scene {
     constructor() {
-        super('outro');
+        super('win');
     }
     create() {
-        this.add.text(50, 50, "That's all!").setFontSize(50);
+        this.add.text(50, 50, "GOOD JOB YOU ESCAPED").setFontSize(50);
+        this.add.text(50, 100, "Click anywhere to restart.").setFontSize(20);
+        this.input.on('pointerdown', () => this.scene.start('intro'));
+    }
+}
+
+class Lose extends Phaser.Scene {
+    constructor() {
+        super('lose');
+    }
+    create() {
+        this.add.text(50, 50, "MAN YOU SUCK").setFontSize(50);
         this.add.text(50, 100, "Click anywhere to restart.").setFontSize(20);
         this.input.on('pointerdown', () => this.scene.start('intro'));
     }
@@ -209,7 +327,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Intro, Demo1, Demo2, Demo3, Outro],
-    title: "Adventure Game",
+    scene: [Intro, Demo1, Demo2, Demo3, Demo4, Demo5, Win, Lose],
+    title: "Mouse trap",
 });
 
