@@ -144,7 +144,7 @@ class Demo3 extends AdventureScene {
         super("demo3", "hallway");
     }
     preload(){
-        this.load.path = './assets';
+        this.load.path = './assets/';
         this.load.image('key','key.png');
         this.load.image('cheese','cheese.png');
         this.load.image('hallway','hallway.png');
@@ -152,13 +152,14 @@ class Demo3 extends AdventureScene {
     }
     onEnter(){
         let hall = this.add.image(720,540,'hallway');
-        hall.setScale(820/hall.height,1920/hall.width)
+        hall.setScale(720/hall.height,1920/hall.width)
         let mouse = this.add.image(720,640,'mouse');
         mouse.setScale(320/mouse.height,480/mouse.width)
         let text = this.add.text(10,10, "While on the way to the cheese you see a key.\nYou stop to make a decision as your tummy growls\n*rumbling*")
             .setFontSize(this.s * 2.5);
 
         let key = this.add.image(620,960,'key')
+        key.setScale(200/key.height,200/key.width)
             .setInteractive()
             .on('pointerover', () => this.showMessage("*STOMACH GROWLS*\nGo to the Key?\n*It might be useful*"))
             .on('pointerdown', () => {
@@ -182,7 +183,7 @@ class Demo4 extends AdventureScene {
         super("demo4", "key");
     }
     preload(){
-        this.load.path= './assets';
+        this.load.path= './assets/';
         this.load.image('key','key.png');
         this.load.image('cheese','cheese.png');
         this.load.image('hallway','hallway.png');
@@ -190,13 +191,14 @@ class Demo4 extends AdventureScene {
     }
     onEnter(){
         let hall = this.add.image(720,540,'hallway');
-        hall.setScale(820/hall.height,1920/hall.width)
+        hall.setScale(720/hall.height,1920/hall.width)
         let mouse = this.add.image(720,640,'mouse');
         mouse.setScale(320/mouse.height,480/mouse.width)
         let text = this.add.text(10,10, "Now that you are here you are starving\nbut the key is right in front of you\nand it looks very important :)")
             .setFontSize(this.s * 2.5);
 
             let key = this.add.image(620,960,'key')
+            key.setScale(200/key.height,200/key.width)
             .setInteractive()
             .on('pointerover', () => this.showMessage("*STOMACH GROWLS*\nPick up the key?\n you might as well you already\ncame to it\n*also It might be useful*"))
             .on('pointerdown', () => {
@@ -227,12 +229,15 @@ class Demo5 extends AdventureScene {
         super("demo5", "cage");
     }
     preload(){
-        this.load.path= './assets';
+        this.load.path= './assets/';
         this.load.image('cage', 'cage.png');
         this.load.image('mosue','mouse.png');
+        this.load.image('hallway','hallway.png')
     }
 
     onEnter(){
+        let hall = this.add.image(720,540,'hallway');
+        hall.setScale(720/hall.height,1920/hall.width)
         let mouse = this.add.image(720,640,'mouse');
         mouse.setScale(320/mouse.height,480/mouse.width)
         let cage = this.add.image(720,0,'cage');
@@ -301,9 +306,14 @@ class Win extends Phaser.Scene {
     constructor() {
         super('win');
     }
+    preload(){
+        this.load.path = './assets/';
+        this.load.image('cheese','cheese.png');
+    }
     create() {
-        this.add.text(50, 50, "GOOD JOB YOU ESCAPED").setFontSize(50);
-        this.add.text(50, 100, "Click anywhere to restart.").setFontSize(20);
+        let cheese = this.add.image(960,540,'cheese');
+        this.add.text(50, 50, "GOOD JOB YOU ESCAPED\nEnjoy your cheese!").setFontSize(50);
+        this.add.text(50, 250, "Click anywhere to restart.").setFontSize(20);
         this.input.on('pointerdown', () => this.scene.start('intro'));
     }
 }
@@ -312,9 +322,14 @@ class Lose extends Phaser.Scene {
     constructor() {
         super('lose');
     }
+    preload(){
+        this.load.path = './assets/';
+        this.load.image('skull','skull.png');
+    }
     create() {
-        this.add.text(50, 50, "MAN YOU SUCK").setFontSize(50);
-        this.add.text(50, 100, "Click anywhere to restart.").setFontSize(20);
+        let skull = this.add.image(960,540,'skull');
+        this.add.text(50, 50, "MAN YOU SUCK\nno cheese for you >:)").setFontSize(50);
+        this.add.text(50, 250, "Click anywhere to restart.").setFontSize(20);
         this.input.on('pointerdown', () => this.scene.start('intro'));
     }
 }
