@@ -2,12 +2,18 @@ class Demo1 extends AdventureScene {
     constructor() {
         super("demo1", "First Room");
     }
+    player;
+    cursors;
     preload() {
         this.load.path = './assets/';
         this.load.image('bedroom', 'bedroom.jpg');
+        this.load.image('mouse','mouse.png');
     }
 
     onEnter() {
+        
+        this.player = this.physics.add.sprite(50,400,'mouse');
+        
         var background = this.add.image(720,540,'bedroom');
         background.setScale(820/background.height,1920/background.width);
         let alone = this.add.text(10,10,'you are alone in the room and you hear the human\n coming, you need to hide quick!!!!!',{color: '0x000000',setFontSize: 4})
@@ -22,6 +28,41 @@ class Demo1 extends AdventureScene {
                     this.gotoScene('demo2');
                 }
             )}
+        this.cursors = this.input.keyboard.createCursorKeys();
+
+        update()
+       {
+           if (this.cursors.left.isDown)
+        {
+            this.player.setVelocityX(-160);
+        }
+        else if (this.cursors.right.isDown)
+        {
+            this.player.setVelocityX(160);
+        }
+        else if (this.input.activePointer.isDown) 
+        {
+            if(this.input.activePointer.worldX < this.player.getCenter().x)
+                this.player.setVelocityX(-160);
+            else this.player.setVelocityX(160);
+        }
+        else
+        {
+            this.player.setVelocityX(0);
+
+        }
+
+        if (this.cursors.up.isDown && this.player.body.touching.down)
+        {
+            this.player.setVelocityY(-330);
+        }
+    }
+       }
+        
+    
+    
+    
+    
             }
         //let clip = this.add.text(this.w * 0.3, this.w * 0.3, "📎 paperclip")
         //    .setFontSize(this.s * 2)
