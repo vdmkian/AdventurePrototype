@@ -12,10 +12,18 @@ class Demo1 extends AdventureScene {
 
     onEnter() {
         
-        this.player = this.physics.add.sprite(50,400,'mouse');
-        
         var background = this.add.image(720,540,'bedroom');
+
         background.setScale(820/background.height,1920/background.width);
+
+        this.player = this.physics.add.sprite(0,1000,'mouse');
+        this.player.setScale(.2);
+
+        this.player.setBounce(0.2);
+        this.player.setCollideWorldBounds(true);
+
+        this.cursors = this.input.keyboard.createCursorKeys();
+
         let alone = this.add.text(10,10,'you are alone in the room and you hear the human\n coming, you need to hide quick!!!!!',{color: '0x000000',setFontSize: 4})
             .setFontSize(this.s * 2.5);
         let arrow = this.add.text(this.w * 0.4,this.w * 0.45, "Hide under the bed")
@@ -28,23 +36,22 @@ class Demo1 extends AdventureScene {
                     this.gotoScene('demo2');
                 }
             )}
-        this.cursors = this.input.keyboard.createCursorKeys();
 
         update()
        {
            if (this.cursors.left.isDown)
         {
-            this.player.setVelocityX(-160);
+            this.player.setVelocityX(-260);
         }
         else if (this.cursors.right.isDown)
         {
-            this.player.setVelocityX(160);
+            this.player.setVelocityX(260);
         }
         else if (this.input.activePointer.isDown) 
         {
             if(this.input.activePointer.worldX < this.player.getCenter().x)
-                this.player.setVelocityX(-160);
-            else this.player.setVelocityX(160);
+                this.player.setVelocityX(-260);
+            else this.player.setVelocityX(260);
         }
         else
         {
@@ -63,7 +70,7 @@ class Demo1 extends AdventureScene {
     
     
     
-            }
+            
         //let clip = this.add.text(this.w * 0.3, this.w * 0.3, "📎 paperclip")
         //    .setFontSize(this.s * 2)
         //    .setInteractive()
@@ -382,6 +389,13 @@ const game = new Phaser.Game({
         autoCenter: Phaser.Scale.CENTER_BOTH,
         width: 1920,
         height: 1080
+    },
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 },
+            debug: false
+        }
     },
     scene: [Intro, Demo1, Demo2, Demo3, Demo4, Demo5, Win, Lose],
     title: "Mouse trap",
